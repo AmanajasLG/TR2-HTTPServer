@@ -27,15 +27,15 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         proxy.cpp \
-    inspector.cpp \
-    spider.cpp \
-    dump.cpp
+        inspector.cpp \
+        spider.cpp \
+        dump.cpp
 
 HEADERS += \
-        proxy.h \
-    inspector.h \
-    spider.h \
-    dump.h
+    dump.hpp \
+    spider.hpp \
+    inspector.hpp \
+    proxy.hpp
 
 FORMS += \
         proxy.ui

@@ -6,10 +6,15 @@ class Inspector : public QThread
 {
 public:
     Inspector();
+
+    void run();
+
     QString GetRequest();
     void SendRequest(QString request);
     QString GetReply();
     void SendReply(QString reply);
+
+
 };
 
 #endif // INSPECTOR_H

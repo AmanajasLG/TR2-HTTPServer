@@ -1,6 +1,10 @@
-#include "dump.h"
+#include "dump.hpp"
 
 Dump::Dump()
 {
+
+}
+
+void Dump::run(){
 
 }

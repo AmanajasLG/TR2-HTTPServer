@@ -1,6 +1,9 @@
-#include "spider.h"
+#include "spider.hpp"
 
 Spider::Spider()
 {
+}
+
+void Spider::run(){
 
 }

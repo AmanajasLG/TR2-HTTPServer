@@ -6,6 +6,7 @@ class Dump : public QThread
 {
 public:
     Dump();
+    void run();
 };
 
 #endif // DUMP_H

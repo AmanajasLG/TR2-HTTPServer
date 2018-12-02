@@ -1,4 +1,4 @@
-#include "proxy.h"
+#include "proxy.hpp"
 #include "ui_proxy.h"
 
 Proxy::Proxy(QWidget *parent) :
@@ -6,6 +6,13 @@ Proxy::Proxy(QWidget *parent) :
     ui(new Ui::Proxy)
 {
     ui->setupUi(this);
+    inspec = new Inspector();
+    dump = new Dump();
+    spider = new Spider();
+
+    inspec->start();
+    dump->start();
+    spider->start();
 
 }
 
@@ -18,7 +25,7 @@ void Proxy::on_spider_clicked()
 {
     ui->stackedWidget->setCurrentIndex(1);
     spider->SetUrl(ui->url->toPlainText());
-    ui->tree->
+    ui->url->clear();
 }
 
 void Proxy::on_back_init_1_clicked()
@@ -34,4 +41,6 @@ void Proxy::on_back_init_2_clicked()
 void Proxy::on_dump_clicked()
 {
     ui->stackedWidget->setCurrentIndex(2);
+    spider->SetUrl(ui->url->toPlainText());
+    ui->url->clear();
 }

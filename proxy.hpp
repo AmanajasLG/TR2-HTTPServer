@@ -2,9 +2,9 @@
 #define PROXY_H
 
 #include <QMainWindow>
-#include "inspector.h"
-#include "dump.h"
-#include "spider.h"
+#include "inspector.hpp"
+#include "dump.hpp"
+#include "spider.hpp"
 
 namespace Ui {
 class Proxy;
@@ -32,7 +32,6 @@ private:
     Inspector *inspec;
     Dump *dump;
     Spider *spider;
-    QString urlSpider = "";
 };
 
 #endif // PROXY_H

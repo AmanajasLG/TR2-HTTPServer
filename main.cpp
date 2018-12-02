@@ -1,4 +1,4 @@
-#include "proxy.h"
+#include "proxy.hpp"
 #include <QApplication>
 
 int main(int argc, char *argv[])
