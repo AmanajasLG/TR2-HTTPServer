@@ -6,7 +6,8 @@
 #include "dump.hpp"
 #include "spider.hpp"
 
-namespace Ui {
+namespace Ui
+{
 class Proxy;
 }
 
@@ -14,11 +15,11 @@ class Proxy : public QMainWindow
 {
     Q_OBJECT
 
-public:
+  public:
     explicit Proxy(QWidget *parent = nullptr);
     ~Proxy();
 
-private slots:
+  private slots:
     void on_spider_clicked();
 
     void on_back_init_1_clicked();
@@ -27,7 +28,7 @@ private slots:
 
     void on_dump_clicked();
 
-private:
+  private:
     Ui::Proxy *ui;
     Inspector *inspec;
     Dump *dump;

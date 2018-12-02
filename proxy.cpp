@@ -1,9 +1,9 @@
 #include "proxy.hpp"
 #include "ui_proxy.h"
+#include <qt4/QtGui/QMessageBox>
 
-Proxy::Proxy(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::Proxy)
+Proxy::Proxy(QWidget *parent) : QMainWindow(parent),
+                                ui(new Ui::Proxy)
 {
     ui->setupUi(this);
     inspec = new Inspector();
@@ -13,7 +13,6 @@ Proxy::Proxy(QWidget *parent) :
     inspec->start();
     dump->start();
     spider->start();
-
 }
 
 Proxy::~Proxy()
@@ -23,6 +22,15 @@ Proxy::~Proxy()
 
 void Proxy::on_spider_clicked()
 {
+    if (ui->url->toPlainText() == "")
+    {
+        QMessageBox msg;
+        msg.setStyleSheet("QMessageBox{text-align: center; }");
+        msg.setText("Insira uma url!");
+        msg.exec();
+        return;
+    }
+
     ui->stackedWidget->setCurrentIndex(1);
     spider->SetUrl(ui->url->toPlainText());
     ui->url->clear();
@@ -40,6 +48,14 @@ void Proxy::on_back_init_2_clicked()
 
 void Proxy::on_dump_clicked()
 {
+    if (ui->url->toPlainText() == "")
+    {
+        QMessageBox msg;
+        msg.setText("Insira uma url!");
+        msg.exec();
+        return;
+    }
+
     ui->stackedWidget->setCurrentIndex(2);
     spider->SetUrl(ui->url->toPlainText());
     ui->url->clear();

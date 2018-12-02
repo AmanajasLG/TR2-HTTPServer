@@ -7,17 +7,19 @@ using namespace std;
 
 class Spider : public QThread
 {
-public:
+  public:
     Spider();
 
     void run();
 
-    void SetUrl(QString url){
+    void SetUrl(QString url)
+    {
         this->url = url.toStdString();
         cout << this->url << endl;
     }
-private:
-    string url = "";
+
+  private:
+    string url;
 };
 
 #endif // SPIDER_H
