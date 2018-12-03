@@ -32,7 +32,8 @@ public:
     QWidget *page;
     QPushButton *spider;
     QPushButton *dump;
-    QPushButton *send;
+    QPushButton *send_request;
+    QPushButton *send_reply;
     QTextEdit *url;
     QTextEdit *request;
     QTextEdit *reply;
@@ -70,9 +71,12 @@ public:
         dump = new QPushButton(page);
         dump->setObjectName(QString::fromUtf8("dump"));
         dump->setGeometry(QRect(400, 20, 75, 23));
-        send = new QPushButton(page);
-        send->setObjectName(QString::fromUtf8("send"));
-        send->setGeometry(QRect(210, 570, 75, 23));
+        send_request = new QPushButton(page);
+        send_request->setObjectName(QString::fromUtf8("send_request"));
+        send_request->setGeometry(QRect(88, 570, 75, 23));
+        send_reply = new QPushButton(page);
+        send_reply->setObjectName(QString::fromUtf8("send_reply"));
+        send_reply->setGeometry(QRect(325, 570, 75, 23));
         url = new QTextEdit(page);
         url->setObjectName(QString::fromUtf8("url"));
         url->setGeometry(QRect(10, 20, 281, 21));
@@ -129,7 +133,8 @@ public:
         Proxy->setWindowTitle(QApplication::translate("Proxy", "Proxy", 0, QApplication::UnicodeUTF8));
         spider->setText(QApplication::translate("Proxy", "SPIDER", 0, QApplication::UnicodeUTF8));
         dump->setText(QApplication::translate("Proxy", "DUMP", 0, QApplication::UnicodeUTF8));
-        send->setText(QApplication::translate("Proxy", "SEND", 0, QApplication::UnicodeUTF8));
+        send_request->setText(QApplication::translate("Proxy", "REQUEST", 0, QApplication::UnicodeUTF8));
+        send_reply->setText(QApplication::translate("Proxy", "REPLY", 0, QApplication::UnicodeUTF8));
         back_init_1->setText(QApplication::translate("Proxy", "BACK", 0, QApplication::UnicodeUTF8));
         dump_2->setText(QApplication::translate("Proxy", "DUMP", 0, QApplication::UnicodeUTF8));
         spider_label->setText(QApplication::translate("Proxy", "SPIDER", 0, QApplication::UnicodeUTF8));

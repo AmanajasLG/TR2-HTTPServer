@@ -59,19 +59,33 @@
        <string>DUMP</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="send">
+     <widget class="QPushButton" name="send_request">
       <property name="geometry">
        <rect>
-        <x>210</x>
+        <x>88</x>
         <y>570</y>
         <width>75</width>
         <height>23</height>
        </rect>
       </property>
       <property name="text">
-       <string>SEND</string>
+       <string>REQUEST</string>
       </property>
      </widget>
+     <widget class="QPushButton" name="send_reply">
+      <property name="geometry">
+       <rect>
+        <x>325</x>
+        <y>570</y>
+        <width>75</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>REPLY</string>
+      </property>
+     </widget>
+     
      <widget class="QTextEdit" name="url">
       <property name="geometry">
        <rect>
