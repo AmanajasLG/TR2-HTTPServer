@@ -4,8 +4,8 @@
 
 class Inspector : public QThread
 {
-public:
-    Inspector();
+  public:
+    Inspector(int numPort = 8228);
 
     void run();
 
@@ -14,7 +14,8 @@ public:
     QString GetReply();
     void SendReply(QString reply);
 
-
+  private:
+    int numPort;
 };
 
 #endif // INSPECTOR_H

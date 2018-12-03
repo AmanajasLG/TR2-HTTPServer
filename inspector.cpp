@@ -1,10 +1,9 @@
 #include "inspector.hpp"
 
-Inspector::Inspector()
+Inspector::Inspector(int numPort) : numPort(numPort)
 {
-
 }
 
-void Inspector::run(){
-
+void Inspector::run()
+{
 }

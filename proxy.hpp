@@ -16,8 +16,11 @@ class Proxy : public QMainWindow
     Q_OBJECT
 
   public:
-    explicit Proxy(QWidget *parent = nullptr);
+    Proxy(QWidget *parent = nullptr);
     ~Proxy();
+
+    void SetPort(int numPort = 8228) { this->numPort = numPort; }
+    void InitThreads();
 
   private slots:
     void on_spider_clicked();
@@ -33,6 +36,7 @@ class Proxy : public QMainWindow
     Inspector *inspec;
     Dump *dump;
     Spider *spider;
+    int numPort;
 };
 
 #endif // PROXY_H

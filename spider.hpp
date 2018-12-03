@@ -8,7 +8,7 @@ using namespace std;
 class Spider : public QThread
 {
   public:
-    Spider();
+    Spider(int numPort);
 
     void run();
 
@@ -20,6 +20,7 @@ class Spider : public QThread
 
   private:
     string url;
+    int numPort;
 };
 
 #endif // SPIDER_H

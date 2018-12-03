@@ -1,9 +1,9 @@
 #include "spider.hpp"
 
-Spider::Spider()
+Spider::Spider(int numPort) : numPort(numPort)
 {
 }
 
-void Spider::run(){
-
+void Spider::run()
+{
 }

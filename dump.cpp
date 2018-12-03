@@ -1,10 +1,9 @@
 #include "dump.hpp"
 
-Dump::Dump()
+Dump::Dump(int numPort) : numPort(numPort)
 {
-
 }
 
-void Dump::run(){
-
+void Dump::run()
+{
 }

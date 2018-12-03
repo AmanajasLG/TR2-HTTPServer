@@ -4,9 +4,12 @@
 
 class Dump : public QThread
 {
-public:
-    Dump();
+  public:
+    Dump(int numPort = 8228);
     void run();
+
+  private:
+    int numPort;
 };
 
 #endif // DUMP_H

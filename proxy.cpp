@@ -4,15 +4,9 @@
 
 Proxy::Proxy(QWidget *parent) : QMainWindow(parent),
                                 ui(new Ui::Proxy)
+
 {
     ui->setupUi(this);
-    inspec = new Inspector();
-    dump = new Dump();
-    spider = new Spider();
-
-    inspec->start();
-    dump->start();
-    spider->start();
 }
 
 Proxy::~Proxy()
@@ -20,12 +14,23 @@ Proxy::~Proxy()
     delete ui;
 }
 
+void Proxy::InitThreads()
+{
+    inspec = new Inspector(numPort);
+    dump = new Dump(numPort);
+    spider = new Spider(numPort);
+
+    inspec->start();
+    dump->start();
+    spider->start();
+}
+
 void Proxy::on_spider_clicked()
 {
     if (ui->url->toPlainText() == "")
     {
         QMessageBox msg;
-        msg.setStyleSheet("QMessageBox{text-align: center; }");
+        msg.setStyleSheet("QLabel{width: 80px }");
         msg.setText("Insira uma url!");
         msg.exec();
         return;
