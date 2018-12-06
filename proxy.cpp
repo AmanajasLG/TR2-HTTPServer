@@ -14,15 +14,27 @@ Proxy::~Proxy()
     delete ui;
 }
 
-void Proxy::InitThreads()
+void Proxy::on_send_request_clicked()
 {
-    inspec = new Inspector(numPort);
-    dump = new Dump(numPort);
-    spider = new Spider(numPort);
+    char *request = ui->request->toPlainText().toLocal8Bit().data();
+    ui->request->clear();
+    emit RequestReady(request);
+}
 
-    inspec->start();
-    dump->start();
-    spider->start();
+void Proxy::on_send_reply_clicked()
+{
+    emit ResponseReady(ui->reply->toPlainText().toLocal8Bit().data());
+    ui->reply->clear();
+}
+
+void Proxy::SetRequestContent(char *buffer)
+{
+    ui->request->setText(QString::fromStdString(string(buffer)));
+}
+
+void Proxy::SetResponseContent(char *buffer)
+{
+    ui->reply->setText(QString::fromStdString(string(buffer)));
 }
 
 void Proxy::on_spider_clicked()
@@ -37,7 +49,6 @@ void Proxy::on_spider_clicked()
     }
 
     ui->stackedWidget->setCurrentIndex(1);
-    spider->SetUrl(ui->url->toPlainText());
     ui->url->clear();
 }
 
@@ -62,6 +73,5 @@ void Proxy::on_dump_clicked()
     }
 
     ui->stackedWidget->setCurrentIndex(2);
-    spider->SetUrl(ui->url->toPlainText());
     ui->url->clear();
 }

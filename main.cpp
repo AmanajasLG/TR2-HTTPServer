@@ -1,4 +1,7 @@
 #include "proxy.hpp"
+#include "inspector.hpp"
+#include "dump.hpp"
+#include "spider.hpp"
 #include <QApplication>
 #include <boost/algorithm/string.hpp>
 
@@ -8,10 +11,11 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     Proxy proxy;
+    int port;
 
     if (argc == 1)
     {
-        proxy.SetPort();
+        port = 8228;
     }
     else if (argc == 3)
     {
@@ -21,7 +25,7 @@ int main(int argc, char *argv[])
             cout << "Execucao deve ter formato ./aracne OU ./aracne -p <numero da porta>" << endl;
             return 0;
         }
-        proxy.SetPort(stoi(argv[2]));
+        port = stoi(argv[2]);
     }
     else
     {
@@ -30,8 +34,19 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    proxy.InitThreads();
     proxy.show();
+    Dump *dump = new Dump(port);
+    Spider *spider = new Spider(port);
+    Inspector *inspec = new Inspector(port);
+
+    dump->start();
+    spider->start();
+    inspec->start();
+
+    QObject::connect(inspec, SIGNAL(RequestShouldShow(char *)), &proxy, SLOT(SetRequestContent(char *)), Qt::QueuedConnection);
+    QObject::connect(&proxy, SIGNAL(RequestReady(char *)), inspec, SLOT(SendRequest(char *)), Qt::QueuedConnection);
+    QObject::connect(inspec, SIGNAL(ResponseShouldShow(char *)), &proxy, SLOT(SetResponseContent(char *)), Qt::QueuedConnection);
+    QObject::connect(&proxy, SIGNAL(ResponseReady(char *)), inspec, SLOT(SendResponse(char *)), Qt::QueuedConnection);
 
     return a.exec();
 }

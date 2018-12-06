@@ -23,20 +23,24 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 CONFIG += c++11
-QMAKE_CXXFLAGS += -std=c++0x
+QMAKE_CXXFLAGS += -std=c++11
 
 SOURCES += \
         main.cpp \
         proxy.cpp \
-        inspector.cpp \
         spider.cpp \
-        dump.cpp
+        dump.cpp \
+        inspector.cpp \
+        socketServer.cpp \ 
+        socketClient.cpp
 
 HEADERS += \
     dump.hpp \
     spider.hpp \
+    proxy.hpp \
     inspector.hpp \
-    proxy.hpp
+    socketServer.hpp \ 
+    socketClient.hpp
 
 FORMS += \
         proxy.ui
