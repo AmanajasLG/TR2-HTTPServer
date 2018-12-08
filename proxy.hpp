@@ -22,9 +22,9 @@ public:
 
 public slots:
 
-  void SetRequestContent(char *buffer);
+  void SetRequestContent(const char *buffer);
 
-  void SetResponseContent(char *buffer);
+  void SetResponseContent(const char *buffer);
 
   void on_spider_clicked();
 
@@ -40,9 +40,9 @@ public slots:
 
 signals:
 
-  void RequestReady(char *buffer);
+  void RequestReady(const char *buffer);
 
-  void ResponseReady(char *buffer);
+  void ResponseReady(const char *buffer);
 
 private:
   Ui::Proxy *ui;

@@ -32,24 +32,26 @@ public:
 
 private slots:
 
-  void RequestIncoming(char *buffer);
+  void RequestIncoming(const char *buffer);
 
-  void SendRequest(char *buffer);
+  void SendRequest(const char *buffer);
 
-  void ResponseIncoming(char *buffer);
+  void ResponseIncoming(const char *buffer);
 
-  void SendResponse(char *buffer);
+  void SendResponse(const char *buffer);
 
 signals:
-  void RequestShouldShow(char *buffer);
+  void RequestShouldShow(const char *buffer);
 
-  void SendRequestToServer(char *buffer);
+  void SendRequestToServer(const char *buffer);
 
-  void ResponseShouldShow(char *buffer);
+  void ResponseShouldShow(const char *buffer);
 
-  void SendResponseToServer(char *buffer);
+  void SendResponseToClient(const char *buffer);
 
 private:
+  SocketServer *server;
+  SocketClient *client;
 };
 
 #endif // INSPECTOR_H

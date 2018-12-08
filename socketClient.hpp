@@ -14,6 +14,8 @@
 #include <sys/wait.h>
 #include <signal.h>
 #include <string>
+#include <syslog.h>
+#include <err.h>
 
 using namespace std;
 
@@ -27,13 +29,19 @@ public:
   void run();
   void GetResponse();
 
-  char *GetHost(char *buffer);
+  string GetHost(const char *buffer);
+
+  void error(const char *msg)
+  {
+    perror(msg);
+    exit(1);
+  }
 
 public slots:
-  void SendRequest(char *buffer);
+  void SendRequest(const char *buffer);
 
 signals:
-  void IncomingResponse(char *buffer);
+  void IncomingResponse(const char *buffer);
 
 private:
   int clientSocket;

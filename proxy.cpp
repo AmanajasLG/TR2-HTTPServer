@@ -16,25 +16,35 @@ Proxy::~Proxy()
 
 void Proxy::on_send_request_clicked()
 {
-    char *request = ui->request->toPlainText().toLocal8Bit().data();
+    if (ui->request->toPlainText() == "")
+        return;
+
+    sleep(0.2);
+    emit RequestReady(ui->request->toPlainText().toLocal8Bit().data());
     ui->request->clear();
-    emit RequestReady(request);
 }
 
 void Proxy::on_send_reply_clicked()
 {
+    if (ui->reply->toPlainText() == "")
+        return;
+
+    sleep(0.2);
+    cout << "PROXY: " << ui->reply->toPlainText().toLocal8Bit().data() << endl;
     emit ResponseReady(ui->reply->toPlainText().toLocal8Bit().data());
     ui->reply->clear();
 }
 
-void Proxy::SetRequestContent(char *buffer)
+void Proxy::SetRequestContent(const char *buffer)
 {
-    ui->request->setText(QString::fromStdString(string(buffer)));
+    sleep(0.2);
+    ui->request->setPlainText(QString::fromStdString(string(buffer)));
 }
 
-void Proxy::SetResponseContent(char *buffer)
+void Proxy::SetResponseContent(const char *buffer)
 {
-    ui->reply->setText(QString::fromStdString(string(buffer)));
+    sleep(0.2);
+    ui->reply->setPlainText(QString::fromStdString(string(buffer)));
 }
 
 void Proxy::on_spider_clicked()

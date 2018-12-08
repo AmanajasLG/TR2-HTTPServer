@@ -1,6 +1,7 @@
 #ifndef SOCKETSERVER_H
 #define SOCKETSERVER_H
 #include <QtCore>
+#include <boost/algorithm/string.hpp>
 #include <iostream>
 #include <netinet/in.h>
 #include <netdb.h>
@@ -22,13 +23,22 @@ class SocketServer : public QThread
 
 public:
   SocketServer(int numPort = 8228);
+  ~SocketServer();
 
   void run();
+  void error(const char *msg)
+  {
+    perror(msg);
+    exit(1);
+  }
+
+  void GetRequest();
+
 public slots:
-  void SendResponse(char *buffer);
+  void SendResponse(const char *buffer);
 
 signals:
-  void IncomingRequest(char *buffer);
+  void IncomingRequest(const char *buffer);
 
 private:
   int serverSocket;

@@ -11,26 +11,33 @@ void SocketClient::run()
 void SocketClient::GetResponse()
 {
 
-    if (read(clientSocket, buffer, 100000) < 0)
-        cout << "ERROR on receive" << endl;
+    if (read(clientSocket, buffer, 10000) < 0)
+    {
+        error("ERROR from reading");
+    }
+
     cout << buffer << endl;
+
     emit IncomingResponse(buffer);
 
     close(clientSocket);
 }
 
-void SocketClient::SendRequest(char *buffer)
+void SocketClient::SendRequest(const char *buffer)
 {
+
     clientSocket = socket(AF_INET, SOCK_STREAM, 0);
 
-    signal(SIGPIPE, SIG_IGN);
+    cout << buffer << endl;
 
-    server = gethostbyname(GetHost(buffer));
+    server = gethostbyname(GetHost(buffer).c_str());
 
     if (server == NULL || server->h_addr_list == NULL)
     {
-        cout << "Could not get host address by name" << endl;
+        error("Could not get host address by name");
     }
+
+    cout << buffer << endl;
 
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_port = htons(80);
@@ -40,30 +47,26 @@ void SocketClient::SendRequest(char *buffer)
           server->h_length);
 
     if (::connect(clientSocket, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
-        cout << "ERROR connecting" << endl;
+        error("ERROR connecting");
 
-    int n = write(clientSocket, buffer, strlen(buffer));
-    if (n < 0)
-        cout << "ERROR writing to socket" << endl;
+    if (write(clientSocket, buffer, strlen(buffer)) < 0)
+        error("ERROR writing to socket");
 
     GetResponse();
 }
 
-char *SocketClient::GetHost(char *buffer)
+string SocketClient::GetHost(const char *buffer)
 {
     vector<string> data;
-    vector<string> hostname;
-
     boost::split(data, buffer, [](char c) { return c == ' ' || c == '\n'; });
 
     for (unsigned int i = 0; i < data.size(); i++)
     {
         if (boost::iequals(data[i], "Host:"))
         {
-            boost::split(hostname, data[i + 1], [](char c) { return c == '.'; });
-            return const_cast<char *>(data[i + 1].c_str());
+            return data[i + 1];
         }
     }
 
-    return const_cast<char *>(data[0].c_str());
+    return const_cast<const char *>(data[0].c_str());
 }

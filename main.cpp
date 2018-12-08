@@ -39,14 +39,14 @@ int main(int argc, char *argv[])
     Spider *spider = new Spider(port);
     Inspector *inspec = new Inspector(port);
 
+    QObject::connect(inspec, SIGNAL(RequestShouldShow(const char *)), &proxy, SLOT(SetRequestContent(const char *)), Qt::QueuedConnection);
+    QObject::connect(&proxy, SIGNAL(RequestReady(const char *)), inspec, SLOT(SendRequest(const char *)), Qt::QueuedConnection);
+    QObject::connect(inspec, SIGNAL(ResponseShouldShow(const char *)), &proxy, SLOT(SetResponseContent(const char *)), Qt::QueuedConnection);
+    QObject::connect(&proxy, SIGNAL(ResponseReady(const char *)), inspec, SLOT(SendResponse(const char *)), Qt::QueuedConnection);
+
     dump->start();
     spider->start();
     inspec->start();
-
-    QObject::connect(inspec, SIGNAL(RequestShouldShow(char *)), &proxy, SLOT(SetRequestContent(char *)), Qt::QueuedConnection);
-    QObject::connect(&proxy, SIGNAL(RequestReady(char *)), inspec, SLOT(SendRequest(char *)), Qt::QueuedConnection);
-    QObject::connect(inspec, SIGNAL(ResponseShouldShow(char *)), &proxy, SLOT(SetResponseContent(char *)), Qt::QueuedConnection);
-    QObject::connect(&proxy, SIGNAL(ResponseReady(char *)), inspec, SLOT(SendResponse(char *)), Qt::QueuedConnection);
 
     return a.exec();
 }

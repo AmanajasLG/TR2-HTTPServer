@@ -4,7 +4,7 @@ SocketServer::SocketServer(int portNum)
 {
     serverSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (serverSocket < 0)
-        cout << "ERROR opening socket" << endl;
+        error("ERROR opening socket");
 
     bzero((char *)&serv_addr, sizeof(serv_addr));
 
@@ -19,36 +19,64 @@ SocketServer::SocketServer(int portNum)
     serv_addr.sin_port = htons(portNum);
 
     if (bind(serverSocket, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
-        cout << "ERROR on binding" << endl;
+        error("ERROR on binding");
 
     listen(serverSocket, 10);
 
     clilen = sizeof(cli_addr);
 }
 
+SocketServer::~SocketServer()
+{
+    close(serverSocket);
+}
+
 void SocketServer::run()
+{
+    exec();
+}
+
+void SocketServer::GetRequest()
 {
     clientSocket = accept(serverSocket, (struct sockaddr *)&cli_addr, &clilen);
     if (clientSocket < 0)
-        cout << "ERROR on accept" << endl;
+        error("ERROR on accept");
+
+    cout << "CLIENT GET " << clientSocket << endl;
 
     printf("server: got connection from %s port %d\n",
            inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port));
 
-    if (recv(clientSocket, buffer, 100000, MSG_WAITALL) < 0)
-        cout << "ERROR on receive" << endl;
+    if (read(clientSocket, buffer, 100000) < 0)
+        error("ERROR on receive");
 
-    emit IncomingRequest(buffer);
+    vector<string> data;
+    boost::split(data, buffer, [](char c) { return c == ' ' || c == '\n'; });
 
-    exec();
+    if (boost::iequals(data[0], "CONNECT"))
+    {
+        const char *connectBuffer = string("200 OK").c_str();
+        SendResponse(connectBuffer);
+        close(clientSocket);
+
+        GetRequest();
+    }
+    else
+    {
+        emit IncomingRequest(buffer);
+    }
 }
 
-void SocketServer::SendResponse(char *buffer)
+void SocketServer::SendResponse(const char *buffer)
 {
-    int n = write(clientSocket, buffer, strlen(buffer));
+    cout << "CLIENT SEND " << clientSocket << endl;
 
-    if (n < 0)
-        cout << "ERROR writing to socket" << endl;
+    cout << "SERVER: " << buffer << endl;
+
+    if (send(clientSocket, buffer, strlen(buffer), MSG_CONFIRM) < 0)
+        error("ERROR writing to socket");
 
     close(clientSocket);
+
+    GetRequest();
 }
