@@ -34,7 +34,7 @@ public:
   void error(const char *msg)
   {
     perror(msg);
-    exit(1);
+    terminate(1);
   }
 
 public slots:

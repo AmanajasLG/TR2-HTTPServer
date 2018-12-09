@@ -29,7 +29,8 @@ public:
   void error(const char *msg)
   {
     perror(msg);
-    exit(1);
+    close(serverSocket);
+    terminate(1);
   }
 
   void GetRequest();
