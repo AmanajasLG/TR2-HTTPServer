@@ -32,22 +32,22 @@ public:
 
 private slots:
 
-  void RequestIncoming(const char *buffer);
+  void RequestIncoming(QString buffer);
 
-  void SendRequest(const char *buffer);
+  void SendRequest(QString buffer);
 
-  void ResponseIncoming(const char *buffer);
+  void ResponseIncoming(QString buffer);
 
-  void SendResponse(const char *buffer);
+  void SendResponse(QString buffer);
 
 signals:
-  void RequestShouldShow(const char *buffer);
+  void RequestShouldShow(QString buffer);
 
-  void SendRequestToServer(const char *buffer);
+  void SendRequestToServer(QString buffer);
 
-  void ResponseShouldShow(const char *buffer);
+  void ResponseShouldShow(QString buffer);
 
-  void SendResponseToClient(const char *buffer);
+  void SendResponseToClient(QString buffer);
 
 private:
   SocketServer *server;

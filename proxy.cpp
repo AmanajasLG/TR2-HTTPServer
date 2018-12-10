@@ -19,8 +19,11 @@ void Proxy::on_send_request_clicked()
     if (ui->request->toPlainText() == "")
         return;
 
-    sleep(0.2);
-    emit RequestReady(ui->request->toPlainText().toLocal8Bit().data());
+    QString fix = ui->request->toPlainText();
+
+    fix.replace(QString("\n"), QString("\r\n"));
+
+    emit RequestReady(fix);
     ui->request->clear();
 }
 
@@ -29,22 +32,18 @@ void Proxy::on_send_reply_clicked()
     if (ui->reply->toPlainText() == "")
         return;
 
-    sleep(0.2);
-    cout << "PROXY: " << ui->reply->toPlainText().toLocal8Bit().data() << endl;
-    emit ResponseReady(ui->reply->toPlainText().toLocal8Bit().data());
+    emit ResponseReady(ui->reply->toPlainText());
     ui->reply->clear();
 }
 
-void Proxy::SetRequestContent(const char *buffer)
+void Proxy::SetRequestContent(QString buffer)
 {
-    sleep(0.2);
-    ui->request->setPlainText(QString::fromStdString(string(buffer)));
+    ui->request->setPlainText(buffer);
 }
 
-void Proxy::SetResponseContent(const char *buffer)
+void Proxy::SetResponseContent(QString buffer)
 {
-    sleep(0.2);
-    ui->reply->setPlainText(QString::fromStdString(string(buffer)));
+    ui->reply->setPlainText(buffer);
 }
 
 void Proxy::on_spider_clicked()

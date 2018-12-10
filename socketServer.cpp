@@ -6,7 +6,7 @@ SocketServer::SocketServer(int portNum)
     if (serverSocket < 0)
         error("ERROR opening socket");
 
-    bzero((char *)&serv_addr, sizeof(serv_addr));
+    bzero((QChar *)&serv_addr, sizeof(serv_addr));
 
     /* setup the host_addr structure for use in bind call */
     // server byte order
@@ -38,24 +38,26 @@ void SocketServer::run()
 
 void SocketServer::GetRequest()
 {
+    char test[10000];
+
     clientSocket = accept(serverSocket, (struct sockaddr *)&cli_addr, &clilen);
     if (clientSocket < 0)
         error("ERROR on accept");
 
-    cout << "CLIENT GET " << clientSocket << endl;
-
     printf("server: got connection from %s port %d\n",
            inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port));
 
-    if (read(clientSocket, buffer, 100000) < 0)
+    
+    if (read(clientSocket, test, 10000) < 0)
         error("ERROR on receive");
+    buffer = QString::fromStdString(test);
 
     vector<string> data;
-    boost::split(data, buffer, [](char c) { return c == ' ' || c == '\n'; });
+    boost::split(data, test, [](QChar c) { return c == ' ' || c == '\n'; });
 
     if (boost::iequals(data[0], "CONNECT"))
     {
-        const char *connectBuffer = string("200 OK").c_str();
+        QString connectBuffer = string("200 OK").c_str();
         SendResponse(connectBuffer);
         close(clientSocket);
 
@@ -67,13 +69,10 @@ void SocketServer::GetRequest()
     }
 }
 
-void SocketServer::SendResponse(const char *buffer)
+void SocketServer::SendResponse(QString buffer)
 {
-    cout << "CLIENT SEND " << clientSocket << endl;
 
-    cout << "SERVER: " << buffer << endl;
-
-    if (send(clientSocket, buffer, strlen(buffer), MSG_CONFIRM) < 0)
+    if (send(clientSocket, buffer.toStdString().c_str(), buffer.length(), MSG_CONFIRM) < 0)
         error("ERROR writing to socket");
 
     close(clientSocket);

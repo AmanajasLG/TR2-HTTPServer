@@ -30,22 +30,22 @@ public:
   {
     perror(msg);
     close(serverSocket);
-    terminate(1);
+    terminate();
   }
 
   void GetRequest();
 
 public slots:
-  void SendResponse(const char *buffer);
+  void SendResponse(QString buffer);
 
 signals:
-  void IncomingRequest(const char *buffer);
+  void IncomingRequest(QString buffer);
 
 private:
   int serverSocket;
   int clientSocket;
   socklen_t clilen;
-  char buffer[100000];
+  QString buffer;
   struct sockaddr_in serv_addr, cli_addr;
 };
 

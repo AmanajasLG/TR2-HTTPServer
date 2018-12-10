@@ -29,24 +29,26 @@ public:
   void run();
   void GetResponse();
 
-  string GetHost(const char *buffer);
+  string GetHost(QString buffer);
+  void FirstPack();
 
   void error(const char *msg)
   {
     perror(msg);
-    terminate(1);
+    close(clientSocket);
+    terminate();
   }
 
 public slots:
-  void SendRequest(const char *buffer);
+  void SendRequest(QString buffer);
 
 signals:
-  void IncomingResponse(const char *buffer);
+  void IncomingResponse(QString buffer);
 
 private:
   int clientSocket;
   struct sockaddr_in serv_addr;
-  char buffer[100000];
+  QString buffer;
   struct hostent *server;
   struct in_addr ipv4addr;
 };
