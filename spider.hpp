@@ -9,12 +9,15 @@
 #include <sys/stat.h>
 #include <netinet/in.h>
 #include <netdb.h>
-#include <stdio.h>
+#include <fstream>
+#include <iterator>
+#include <set>
+#include <regex>
+#include <cstdio>
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <vector>
-#include <fcntl.h>
 
 using namespace std;
 
@@ -23,23 +26,35 @@ class Spider : public QThread
   Q_OBJECT
 
 public:
+  struct Page
+  {
+    Page *father;
+    int lvl;
+    string name;
+  };
+
   Spider();
   void run();
 
   void ConfigURL();
 
   void Parser(char *req, char *host);
-  void ExecSpider(char *host, char *path, char *list);
+  void ExecSpider(char *host, char *path, int lvl, Page *father);
+  void BuildTree();
+  std::set<std::string> ExtractHyperlinks(std::string text);
 
 public slots:
   void SetUrl(QString url);
+signals:
+  void ShowTree(QString tree);
 
 private:
   string url;
-  char assets[100000];
-  char fassets[100000];
-  char req[100000];
-  char list[100000];
+  char assets[1000000];
+  char fassets[1000000];
+  char req[1000000];
+  vector<Page> siteList;
+  vector<Page> siteListOld;
   int count;
 };
 

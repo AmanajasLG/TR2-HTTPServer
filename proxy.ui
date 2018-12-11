@@ -134,7 +134,7 @@
      </widget>
     </widget>
     <widget class="QWidget" name="page_2">
-     <widget class="QTreeView" name="tree">
+     <widget class="QTextEdit" name="tree">
       <property name="geometry">
        <rect>
         <x>10</x>

@@ -39,7 +39,7 @@ public:
     QTextEdit *request;
     QTextEdit *reply;
     QWidget *page_2;
-    QTreeView *tree;
+    QTextEdit *tree;
     QPushButton *back_init_1;
     QPushButton *dump_2;
     QLabel *spider_label;
@@ -94,7 +94,7 @@ public:
         stackedWidget->addWidget(page);
         page_2 = new QWidget();
         page_2->setObjectName(QString::fromUtf8("page_2"));
-        tree = new QTreeView(page_2);
+        tree = new QTextEdit(page_2);
         tree->setObjectName(QString::fromUtf8("tree"));
         tree->setGeometry(QRect(10, 60, 471, 501));
         back_init_1 = new QPushButton(page_2);

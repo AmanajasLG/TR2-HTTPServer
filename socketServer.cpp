@@ -2,7 +2,6 @@
 
 SocketServer::SocketServer(int numPort) : numPort(numPort)
 {
-   
 }
 
 SocketServer::~SocketServer()
@@ -18,9 +17,9 @@ void SocketServer::run()
 void SocketServer::GetRequest()
 {
     int tr = 1;
-    char test[10000];
+    char test[1000000] = {0};
 
-     serverSocket = socket(AF_INET, SOCK_STREAM, 0);
+    serverSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (serverSocket < 0)
         error("ERROR opening socket");
 
@@ -52,16 +51,25 @@ void SocketServer::GetRequest()
     if (clientSocket < 0)
         error("ERROR on accept");
 
+    struct timeval tv;
+    tv.tv_sec = 0.5;
+    tv.tv_usec = 0;
+    if (setsockopt(clientSocket, SOL_SOCKET, SO_RCVTIMEO, (const char *)&tv, sizeof tv) == -1)
+    {
+        perror("ERROR on setsockopt");
+    }
+
     printf("server: got connection from %s port %d\n",
            inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port));
-    
+
     close(serverSocket);
-    
-    if (read(clientSocket, test, 10000) < 0)
+
+    if (read(clientSocket, test, 1000000) < 0)
         error("ERROR on receive");
-    
+
     buffer.clear();
     buffer = QString::fromStdString(test);
+    cout << test << endl;
 
     vector<string> data;
     boost::split(data, test, [](QChar c) { return c == ' ' || c == '\n'; });
@@ -82,11 +90,19 @@ void SocketServer::GetRequest()
 
 void SocketServer::SendResponse(QString buffer)
 {
+    struct timeval tv;
+    tv.tv_sec = 0.5;
+    tv.tv_usec = 0;
+    if (setsockopt(clientSocket, SOL_SOCKET, SO_SNDTIMEO, (const char *)&tv, sizeof tv) == -1)
+    {
+        perror("ERROR on setsockopt");
+    }
 
     if (send(clientSocket, buffer.toStdString().c_str(), buffer.length(), MSG_CONFIRM) < 0)
         error("ERROR writing to socket");
 
     close(clientSocket);
+    buffer.clear();
 
     GetRequest();
 }

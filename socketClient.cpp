@@ -10,76 +10,48 @@ void SocketClient::run()
 
 void SocketClient::GetResponse()
 {
-    int n;
-    char test[10000];
+
+    char test[1000000] = {0};
     buffer.clear();
-
-    FirstPack();
-
-    while (responseSize > 0)
+    memset(test, 0, sizeof(test));
+    int total = sizeof(test) - 1;
+    int received = 0;
+    int bytes;
+    do
     {
-        cout << "RESPONSESIZE >: " << responseSize << endl;
-        if ((n = recv(clientSocket, test, 10000, MSG_WAITALL)) < 0)
+        cout << "RECEIVED> " << received << endl;
+        bytes = recv(clientSocket, test + received, total - received, 0);
+        if (bytes < 0)
         {
-            error("ERROR from reading");
+            error("Error on receiving");
+            break;
         }
 
-        if (n < 0)
-            error("Erro ao ler no socket");
-        else if (n > 0)
-            responseSize -= n;
+        cout << "BITES> " << bytes << endl;
 
-        buffer += QString::fromStdString(test);
-    }
+        if (bytes == 0)
+            break;
+        received += bytes;
+    } while (received < total);
 
-    cout << buffer.toStdString() << endl;
-
+    buffer = QString::fromStdString(test);
     emit IncomingResponse(buffer);
 
     close(clientSocket);
-}
-
-void SocketClient::FirstPack()
-{
-    char *tmpBuffer;
-    int n;
-    char test[10000];
-
-    if ((n = recv(clientSocket, test, 10000, MSG_WAITALL)) < 0)
-    {
-        error("ERROR from reading");
-    }
-
-    cout << test << endl;
-
-    responseSize = GetSize(test);
-
-    if (responseSize == 0)
-    {
-        buffer = QString::fromStdString(test);
-        return;
-    }
-
-    tmpBuffer = strstr(test, "\r\n\r\n");
-
-    if (tmpBuffer != NULL)
-    {
-        tmpBuffer += 4;
-        n = n - (int)(tmpBuffer - test);
-    }
-
-    if (n < 0)
-        error("ERROR from reading");
-    else if (n > 0)
-        responseSize -= n;
-
-    buffer = QString::fromStdString(test);
 }
 
 void SocketClient::SendRequest(QString buffer)
 {
 
     clientSocket = socket(AF_INET, SOCK_STREAM, 0);
+
+    struct timeval tv;
+    tv.tv_sec = 10;
+    tv.tv_usec = 0;
+    if (setsockopt(clientSocket, SOL_SOCKET, SO_RCVTIMEO, (const void *)&tv, sizeof tv) == -1)
+    {
+        perror("ERROR on setsockopt");
+    }
 
     server = gethostbyname(GetHost(buffer.toStdString().c_str()).c_str());
 
