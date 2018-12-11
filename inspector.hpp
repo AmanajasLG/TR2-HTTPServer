@@ -40,6 +40,11 @@ private slots:
 
   void SendResponse(QString buffer);
 
+  void ProxyInit()
+  {
+    server->GetRequest();
+  }
+
 signals:
   void RequestShouldShow(QString buffer);
 

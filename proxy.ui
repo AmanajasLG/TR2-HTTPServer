@@ -72,6 +72,19 @@
        <string>REQUEST</string>
       </property>
      </widget>
+     <widget class="QPushButton" name="start">
+      <property name="geometry">
+       <rect>
+        <x>207</x>
+        <y>570</y>
+        <width>75</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>START</string>
+      </property>
+     </widget>
      <widget class="QPushButton" name="send_reply">
       <property name="geometry">
        <rect>

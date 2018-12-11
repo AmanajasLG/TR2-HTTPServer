@@ -44,6 +44,7 @@ signals:
 private:
   int serverSocket;
   int clientSocket;
+  int numPort;
   socklen_t clilen;
   QString buffer;
   struct sockaddr_in serv_addr, cli_addr;

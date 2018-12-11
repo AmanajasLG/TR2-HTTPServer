@@ -30,6 +30,7 @@ public:
   void GetResponse();
 
   string GetHost(QString buffer);
+  int GetSize(QString buffer);
   void FirstPack();
 
   void error(const char *msg)
@@ -47,6 +48,7 @@ signals:
 
 private:
   int clientSocket;
+  int responseSize;
   struct sockaddr_in serv_addr;
   QString buffer;
   struct hostent *server;

@@ -31,8 +31,11 @@ void Proxy::on_send_reply_clicked()
 {
     if (ui->reply->toPlainText() == "")
         return;
+    QString fix = ui->reply->toPlainText();
 
-    emit ResponseReady(ui->reply->toPlainText());
+    fix.replace(QString("\n"), QString("\r\n"));
+
+    emit ResponseReady(fix);
     ui->reply->clear();
 }
 
@@ -58,6 +61,7 @@ void Proxy::on_spider_clicked()
     }
 
     ui->stackedWidget->setCurrentIndex(1);
+    emit StartSpider(ui->url->toPlainText());
     ui->url->clear();
 }
 
@@ -69,6 +73,11 @@ void Proxy::on_back_init_1_clicked()
 void Proxy::on_back_init_2_clicked()
 {
     ui->stackedWidget->setCurrentIndex(0);
+}
+
+void Proxy::on_start_clicked()
+{
+    emit StartProxy();
 }
 
 void Proxy::on_dump_clicked()

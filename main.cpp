@@ -11,6 +11,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     Proxy proxy;
+    proxy.show();
     int port;
 
     if (argc == 1)
@@ -34,15 +35,16 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    proxy.show();
     Dump *dump = new Dump(port);
-    Spider *spider = new Spider(port);
+    Spider *spider = new Spider();
     Inspector *inspec = new Inspector(port);
 
     QObject::connect(inspec, SIGNAL(RequestShouldShow(QString)), &proxy, SLOT(SetRequestContent(QString)), Qt::QueuedConnection);
     QObject::connect(&proxy, SIGNAL(RequestReady(QString)), inspec, SLOT(SendRequest(QString)), Qt::QueuedConnection);
     QObject::connect(inspec, SIGNAL(ResponseShouldShow(QString)), &proxy, SLOT(SetResponseContent(QString)), Qt::QueuedConnection);
     QObject::connect(&proxy, SIGNAL(ResponseReady(QString)), inspec, SLOT(SendResponse(QString)), Qt::QueuedConnection);
+    QObject::connect(&proxy, SIGNAL(StartProxy()), inspec, SLOT(ProxyInit()), Qt::QueuedConnection);
+    QObject::connect(&proxy, SIGNAL(StartSpider(QString)), spider, SLOT(SetUrl(QString)), Qt::QueuedConnection);
 
     dump->start();
     spider->start();

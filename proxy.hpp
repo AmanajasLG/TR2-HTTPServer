@@ -36,9 +36,14 @@ public slots:
 
   void on_send_reply_clicked();
 
+  void on_start_clicked();
+
   void on_dump_clicked();
 
 signals:
+  void StartProxy();
+
+  void StartSpider(QString url);
 
   void RequestReady(QString buffer);
 

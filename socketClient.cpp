@@ -12,20 +12,68 @@ void SocketClient::GetResponse()
 {
     int n;
     char test[10000];
+    buffer.clear();
 
-    if (read(clientSocket, test, 10000) < 0)
+    FirstPack();
+
+    while (responseSize > 0)
     {
-        error("ERROR from reading");
+        cout << "RESPONSESIZE >: " << responseSize << endl;
+        if ((n = recv(clientSocket, test, 10000, MSG_WAITALL)) < 0)
+        {
+            error("ERROR from reading");
+        }
+
+        if (n < 0)
+            error("Erro ao ler no socket");
+        else if (n > 0)
+            responseSize -= n;
+
+        buffer += QString::fromStdString(test);
     }
 
-
-    cout << test  << endl;
-
-    buffer = QString::fromStdString(test);
+    cout << buffer.toStdString() << endl;
 
     emit IncomingResponse(buffer);
 
     close(clientSocket);
+}
+
+void SocketClient::FirstPack()
+{
+    char *tmpBuffer;
+    int n;
+    char test[10000];
+
+    if ((n = recv(clientSocket, test, 10000, MSG_WAITALL)) < 0)
+    {
+        error("ERROR from reading");
+    }
+
+    cout << test << endl;
+
+    responseSize = GetSize(test);
+
+    if (responseSize == 0)
+    {
+        buffer = QString::fromStdString(test);
+        return;
+    }
+
+    tmpBuffer = strstr(test, "\r\n\r\n");
+
+    if (tmpBuffer != NULL)
+    {
+        tmpBuffer += 4;
+        n = n - (int)(tmpBuffer - test);
+    }
+
+    if (n < 0)
+        error("ERROR from reading");
+    else if (n > 0)
+        responseSize -= n;
+
+    buffer = QString::fromStdString(test);
 }
 
 void SocketClient::SendRequest(QString buffer)
@@ -50,10 +98,8 @@ void SocketClient::SendRequest(QString buffer)
     if (::connect(clientSocket, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
         error("ERROR connecting");
 
-
     if (write(clientSocket, buffer.toStdString().c_str(), buffer.size()) < 0)
         error("ERROR writing to socket");
-    
 
     GetResponse();
 }
@@ -69,10 +115,29 @@ string SocketClient::GetHost(QString buffer)
         cout << data[i] << endl;
         if (boost::iequals(data[i], "Host:"))
         {
-            cout << data[i+1] << endl;
+            cout << data[i + 1] << endl;
             return data[i + 1];
         }
     }
 
     return data[0];
+}
+
+int SocketClient::GetSize(QString buffer)
+{
+    vector<string> data;
+    string utf8_text = buffer.toUtf8().constData();
+    boost::split(data, utf8_text, [](QChar c) { return c == ' ' || c == '\n' || c == '\r'; });
+
+    for (unsigned int i = 0; i < data.size(); i++)
+    {
+        cout << data[i] << endl;
+        if (boost::iequals(data[i], "Content-Length:"))
+        {
+            cout << data[i + 1] << endl;
+            return stoi(data[i + 1]);
+        }
+    }
+
+    return 0;
 }

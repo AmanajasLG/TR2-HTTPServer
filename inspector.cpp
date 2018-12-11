@@ -12,8 +12,6 @@ Inspector::Inspector(int numPort)
     QObject::connect(client, SIGNAL(IncomingResponse(QString)), this, SLOT(ResponseIncoming(QString)), Qt::QueuedConnection);
     QObject::connect(this, SIGNAL(SendRequestToServer(QString)), client, SLOT(SendRequest(QString)), Qt::QueuedConnection);
     QObject::connect(this, SIGNAL(SendResponseToClient(QString)), server, SLOT(SendResponse(QString)), Qt::QueuedConnection);
-
-    server->GetRequest();
 }
 
 void Inspector::run()
