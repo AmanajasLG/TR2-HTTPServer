@@ -42,10 +42,14 @@ public slots:
 
   void on_dump_clicked();
 
+  void on_dump_2_clicked();
+
 signals:
   void StartProxy();
 
   void StartSpider(QString url);
+
+  void StartDump(QString url);
 
   void RequestReady(QString buffer);
 
@@ -53,6 +57,7 @@ signals:
 
 private:
   Ui::Proxy *ui;
+  QString url;
 };
 
 #endif // PROXY_H

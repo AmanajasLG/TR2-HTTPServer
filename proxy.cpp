@@ -61,7 +61,8 @@ void Proxy::on_spider_clicked()
     }
 
     ui->stackedWidget->setCurrentIndex(1);
-    emit StartSpider(ui->url->toPlainText());
+    url = ui->url->toPlainText();
+    emit StartSpider(url);
     ui->url->clear();
 }
 
@@ -91,7 +92,14 @@ void Proxy::on_dump_clicked()
     }
 
     ui->stackedWidget->setCurrentIndex(2);
+    emit StartDump(ui->url->toPlainText());
     ui->url->clear();
+}
+
+void Proxy::on_dump_2_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(2);
+    emit StartDump(url);
 }
 
 void Proxy::SetTreeContent(QString buffer)

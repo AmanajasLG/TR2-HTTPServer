@@ -64,15 +64,13 @@ void Spider::ExecSpider(char *host, char *path, int lvl, Page *father)
     clientSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (clientSocket < 0)
     {
-        printf("Error on creating socket\n");
-        exit(0);
+        error("Error on creating socket");
     }
 
     server = gethostbyname(host);
     if (server == NULL)
     {
-        printf("Error on geting host by name\n");
-        exit(0);
+        error("Error on geting host by name");
     }
 
     memset(&serv_addr, 0, sizeof(serv_addr));
@@ -82,8 +80,7 @@ void Spider::ExecSpider(char *host, char *path, int lvl, Page *father)
 
     if (::connect(clientSocket, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
     {
-        printf("Error on connecting to socket\n");
-        exit(0);
+        error("Error on connecting to socket");
     }
     total = strlen(req);
     sent = 0;
@@ -93,8 +90,7 @@ void Spider::ExecSpider(char *host, char *path, int lvl, Page *father)
         bytes = write(clientSocket, req + sent, total - sent);
         if (bytes < 0)
         {
-            printf("Error on sending request to server\n");
-            exit(0);
+            error("Error on sending request to server");
         }
         if (bytes == 0)
             break;
@@ -109,8 +105,7 @@ void Spider::ExecSpider(char *host, char *path, int lvl, Page *father)
         bytes = read(clientSocket, resp + received, total - received);
         if (bytes < 0)
         {
-            printf("Error on receiving response from server\n");
-            exit(0);
+            error("Error on receiving response from serves");
         }
         if (bytes == 0)
             break;

@@ -32,9 +32,15 @@ public:
     int lvl;
     string name;
   };
-
   Spider();
   void run();
+
+  void error(const char *msg)
+  {
+    perror(msg);
+    close(serverSocket);
+    terminate();
+  }
 
   void ConfigURL();
 
