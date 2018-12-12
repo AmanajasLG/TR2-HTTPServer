@@ -45,6 +45,7 @@ int main(int argc, char *argv[])
     QObject::connect(&proxy, SIGNAL(ResponseReady(QString)), inspec, SLOT(SendResponse(QString)), Qt::QueuedConnection);
     QObject::connect(&proxy, SIGNAL(StartProxy()), inspec, SLOT(ProxyInit()), Qt::QueuedConnection);
     QObject::connect(&proxy, SIGNAL(StartSpider(QString)), spider, SLOT(SetUrl(QString)), Qt::QueuedConnection);
+    QObject::connect(spider, SIGNAL(ShowTree(QString)), &proxy, SLOT(SetTreeContent(QString)), Qt::QueuedConnection);
 
     dump->start();
     spider->start();

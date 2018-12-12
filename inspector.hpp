@@ -15,8 +15,7 @@
 #include <sys/wait.h>
 #include <signal.h>
 #include <string>
-#include "socketServer.hpp"
-#include "socketClient.hpp"
+#include "socket.hpp"
 
 using namespace std;
 
@@ -42,7 +41,7 @@ private slots:
 
   void ProxyInit()
   {
-    server->GetRequest();
+    socket->GetRequest();
   }
 
 signals:
@@ -55,8 +54,7 @@ signals:
   void SendResponseToClient(QString buffer);
 
 private:
-  SocketServer *server;
-  SocketClient *client;
+  Socket *socket;
 };
 
 #endif // INSPECTOR_H

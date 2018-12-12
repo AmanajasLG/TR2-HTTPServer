@@ -3,15 +3,13 @@
 
 Inspector::Inspector(int numPort)
 {
-    server = new SocketServer(numPort);
-    client = new SocketClient();
-    server->start();
-    client->start();
+    socket = new Socket(numPort);
+    socket->start();
 
-    QObject::connect(server, SIGNAL(IncomingRequest(QString)), this, SLOT(RequestIncoming(QString)), Qt::QueuedConnection);
-    QObject::connect(client, SIGNAL(IncomingResponse(QString)), this, SLOT(ResponseIncoming(QString)), Qt::QueuedConnection);
-    QObject::connect(this, SIGNAL(SendRequestToServer(QString)), client, SLOT(SendRequest(QString)), Qt::QueuedConnection);
-    QObject::connect(this, SIGNAL(SendResponseToClient(QString)), server, SLOT(SendResponse(QString)), Qt::QueuedConnection);
+    QObject::connect(socket, SIGNAL(IncomingRequest(QString)), this, SLOT(RequestIncoming(QString)), Qt::QueuedConnection);
+    QObject::connect(socket, SIGNAL(IncomingResponse(QString)), this, SLOT(ResponseIncoming(QString)), Qt::QueuedConnection);
+    QObject::connect(this, SIGNAL(SendRequestToServer(QString)), socket, SLOT(SendRequestSlot(QString)), Qt::QueuedConnection);
+    QObject::connect(this, SIGNAL(SendResponseToClient(QString)), socket, SLOT(SendResponseSlot(QString)), Qt::QueuedConnection);
 }
 
 void Inspector::run()
@@ -20,8 +18,7 @@ void Inspector::run()
 
 Inspector::~Inspector()
 {
-    server->terminate();
-    client->terminate();
+    socket->terminate();
 }
 
 void Inspector::RequestIncoming(QString buffer)

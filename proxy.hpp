@@ -26,6 +26,8 @@ public slots:
 
   void SetResponseContent(QString buffer);
 
+  void SetTreeContent(QString buffer);
+
   void on_spider_clicked();
 
   void on_back_init_1_clicked();

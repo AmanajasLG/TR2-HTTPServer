@@ -38,7 +38,6 @@ public:
 
   void ConfigURL();
 
-  void Parser(char *req, char *host);
   void ExecSpider(char *host, char *path, int lvl, Page *father);
   void BuildTree();
   std::set<std::string> ExtractHyperlinks(std::string text);
@@ -54,7 +53,7 @@ private:
   char fassets[1000000];
   char req[1000000];
   vector<Page> siteList;
-  vector<Page> siteListOld;
+  vector<Page> siteListFix;
   int count;
 };
 

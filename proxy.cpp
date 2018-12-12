@@ -93,3 +93,8 @@ void Proxy::on_dump_clicked()
     ui->stackedWidget->setCurrentIndex(2);
     ui->url->clear();
 }
+
+void Proxy::SetTreeContent(QString buffer)
+{
+    ui->tree->setPlainText(buffer);
+}

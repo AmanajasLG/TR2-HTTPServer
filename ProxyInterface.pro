@@ -31,16 +31,14 @@ SOURCES += \
         spider.cpp \
         dump.cpp \
         inspector.cpp \
-        socketServer.cpp \ 
-        socketClient.cpp
+        socket.cpp \ 
 
 HEADERS += \
     dump.hpp \
     spider.hpp \
     proxy.hpp \
     inspector.hpp \
-    socketServer.hpp \ 
-    socketClient.hpp
+    socket.hpp \ 
 
 FORMS += \
         proxy.ui

@@ -18,7 +18,7 @@ void Spider::SetUrl(QString url)
 
 std::set<std::string> Spider::ExtractHyperlinks(std::string text)
 {
-    static const regex hl_regex("<a href=\"(.*?)\"", std::regex_constants::icase);
+    static const regex hl_regex("<a href=\"([^#].*?)\"", std::regex_constants::icase);
 
     return {sregex_token_iterator(text.begin(), text.end(), hl_regex, 1),
             sregex_token_iterator{}};
@@ -39,8 +39,6 @@ void Spider::ConfigURL()
 
 void Spider::ExecSpider(char *host, char *path, int lvl, Page *father)
 {
-    if (lvl >= 3)
-        return;
 
     Page page;
     page.father = father;
@@ -48,6 +46,9 @@ void Spider::ExecSpider(char *host, char *path, int lvl, Page *father)
     page.name = path;
 
     siteList.push_back(page);
+
+    if (lvl > 1)
+        return;
 
     int clientSocket, port = 80, bytes, sent, received, total;
     strcpy(req, "GET ");
@@ -105,7 +106,6 @@ void Spider::ExecSpider(char *host, char *path, int lvl, Page *father)
     received = 0;
     do
     {
-
         bytes = read(clientSocket, resp + received, total - received);
         if (bytes < 0)
         {
@@ -118,17 +118,59 @@ void Spider::ExecSpider(char *host, char *path, int lvl, Page *father)
     } while (received < total);
 
     close(clientSocket);
-    cout << "PASS LVL> " << lvl << endl;
+
     for (std::string hlink : ExtractHyperlinks(resp))
     {
-        cout << hlink << endl;
-        if (hlink[0] == '/')
+        if (hlink.find("http") == string::npos)
         {
-            ExecSpider(host, const_cast<char *>(hlink.c_str()), lvl + 1, &page);
+            if (hlink[0] != '/')
+            {
+
+                ExecSpider(host, const_cast<char *>(('/' + hlink).c_str()), page.lvl + 1, &page);
+            }
+            else
+                ExecSpider(host, const_cast<char *>(hlink.c_str()), page.lvl + 1, &page);
+        }
+        else
+        {
+            Page pageOut;
+            pageOut.father = &page;
+            pageOut.lvl = page.lvl + 1;
+            pageOut.name = hlink;
+
+            siteList.push_back(pageOut);
         }
     }
+
+    BuildTree();
 }
 
 void Spider::BuildTree()
 {
+    QString buffer;
+
+    int size = siteList.size();
+    for (int i = 0; i < size; i++)
+    {
+        Page pag = siteList.at(i);
+
+        if (pag.lvl == 0)
+        {
+            buffer += QString::fromStdString(pag.name + "\n");
+        }
+        else if (pag.lvl == 1)
+        {
+            buffer += QString::fromStdString("   | " + pag.name + "\n");
+        }
+        else if (pag.lvl == 2)
+        {
+            buffer += QString::fromStdString("   |    | " + pag.name + "\n");
+        }
+        else
+        {
+            buffer += QString::fromStdString("   |    |    | " + pag.name + "\n");
+        }
+    }
+
+    emit ShowTree(buffer);
 }
